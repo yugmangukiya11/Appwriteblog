@@ -10,9 +10,7 @@ function EditPost() {
 
     useEffect(() => {
         if(slug){
-            // console.log(slug.slug)
             appWriteService.getPost(slug).then((post) => {
-                console.log(post)
                 if(post){
                     setpost(post)
                 }
