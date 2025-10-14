@@ -12,7 +12,7 @@ function EditPost() {
         if(slug){
             // console.log(slug.slug)
             appWriteService.getPost(slug).then((post) => {
-                // console.log(post)
+                console.log(post)
                 if(post){
                     setpost(post)
                 }

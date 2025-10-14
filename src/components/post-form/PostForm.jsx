@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 
 export default function PostForm({post}) {
 
-    const { register, handleSubmit, watch, setValue, control, getValues } = useForm({
+    const { register, handleSubmit, watch, setValue, control, getValues,reset } = useForm({
         defaultValues:{
             title : post?.title || '',
             slug : post?.slug || '',
@@ -16,6 +16,18 @@ export default function PostForm({post}) {
             content : post?.content || '',
         },
     });
+
+    useEffect(() => {
+        if (post) {
+            reset({
+                title: post.title || "",
+                slug: post.$id || "",
+                status: post.status || "active",
+                content: post.content || "",
+            });
+        }
+    }, [post, reset]);
+    
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
     const submit = async (data) => {
