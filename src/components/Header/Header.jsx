@@ -12,6 +12,8 @@ function Header() {
     { name: "Home", slug: "/", active: true },
     { name: "All Posts", slug: "/all-posts", active: authStatus },
     { name: "Add Post", slug: "/add-post", active: authStatus },
+    { name: "About", slug: "/about", active: true },
+    { name: "Contact Us", slug: "/contactus", active: true },
   ];
 
   return (
