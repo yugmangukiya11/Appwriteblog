@@ -15,20 +15,20 @@ function AllPosts() {
     }, [])
     
   return (
-    <div className='w-full py-8'>
-        <Container>
-            <div className='flex flex-wrap'>
-                {
-                    
-                    posts.map((post) => (
-                        <div key={post.$id} className='p-2 w-1/4'>
-                            <PostCard {...post} />
-                        </div>
-
-                    ))
-                }
+    <div className="w-full py-12 bg-gray-50">
+      <Container>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">All Posts</h2>
+        <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {posts.map((post) => (
+            <div
+              key={post.$id}
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+            >
+              <PostCard {...post} />
             </div>
-        </Container>
+          ))}
+        </div>
+      </Container>
     </div>
   )
 }
