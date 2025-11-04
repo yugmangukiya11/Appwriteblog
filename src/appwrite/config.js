@@ -99,7 +99,8 @@ class Service{
             return await this.bucket.createFile(
                 conf.appwriteBucketId,
                 ID.unique(),
-                file
+                file,
+                [Permission.read(Role.any())]
             )
             
         } catch (error) {
