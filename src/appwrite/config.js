@@ -100,7 +100,6 @@ class Service{
                 conf.appwriteBucketId,
                 ID.unique(),
                 file,
-                [Permission.read(Role.any())]
             )
             
         } catch (error) {
