@@ -8,7 +8,10 @@ import { useForm } from 'react-hook-form'
 
 export default function PostForm({post}) {
 
-    const { register, handleSubmit, watch, setValue, control, getValues,reset } = useForm({
+    const [selectedImagePreview, setSelectedImagePreview] = React.useState(null);
+
+
+    const { register, handleSubmit, watch, setValue, control, getValues,reset,formState: { errors }, } = useForm({
         defaultValues:{
             title : post?.title || '',
             slug : post?.slug || '',
@@ -90,7 +93,7 @@ export default function PostForm({post}) {
             }
         })
 
-        
+        //for free memory
         return () => subscription.unsubscribe();
     },[watch,setValue,slugTransform])
 
@@ -101,17 +104,20 @@ export default function PostForm({post}) {
                     label="Title :"
                     placeholder="Title"
                     className="mb-4"
-                    {...register("title", { required: true })}
+                    {...register("title", { required: "*title is required" })}
                 />
+                {errors.title && <p className="text-red-500 text-sm mb-3">{errors.title.message}</p>}
                 <Input
                     label="Slug :"
                     placeholder="Slug"
-                    className="mb-4"
+                    disabled
+                    className="mb-4 hover:cursor-not-allowed"
                     {...register("slug", { required: true })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
-                    }}
+                    }}  
                 />
+
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
             </div>
             <div className="w-1/3 px-2">
@@ -121,16 +127,27 @@ export default function PostForm({post}) {
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
                     {...register("image", { required: !post })}
+                    onInput={(e) => {
+                        const file = e.target.files?.[0];
+                        if(file){
+                            setSelectedImagePreview(URL.createObjectURL(file));
+                        }
+                    }}
                 />
-                {post && (
-                    <div className="w-full mb-4">
-                        <img
-                            src={appWriteService.getFilePreview(post.featuredImage)}
-                            alt={post.title}
-                            className="rounded-lg"
-                        />
-                    </div>
-                )}
+                {
+                    (selectedImagePreview || post) && (
+
+                        <div className='w-full mb-4'>
+                            <img 
+                            src={
+                                selectedImagePreview ? selectedImagePreview : appWriteService.getFilePreview(post.featuredImage)
+                            } 
+                            alt={post?.title || "image preview"}
+                            className='rounded-lg' />
+
+                        </div>
+                    )
+                }
                 <Select
                     options={["active", "inactive"]}
                     label="Status"

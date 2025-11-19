@@ -9,7 +9,8 @@ function App() {
 
   const [Loading, setLoading] = useState(true)
   const dispatch = useDispatch()
-//change
+
+  //used for keep user login by cookies
   useEffect(() => {
    authService.getCurrentUser()
     .then((userData) => {
