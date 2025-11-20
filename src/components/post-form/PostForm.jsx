@@ -158,7 +158,7 @@ export default function PostForm({post}) {
                     {...register("status", { required: true })}
                 />
                 <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {loading ? (<CircularProgress size={18} />) :( post ? "Update" : "Submit")}
+                    {loading ? (<CircularProgress size={18} sx={{color: "white"}} />) :( post ? "Update" : "Submit")}
                 </Button>
             </div>
         </form>
