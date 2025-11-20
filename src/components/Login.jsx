@@ -5,15 +5,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { login as authLogin } from "../store/authSlice";
 import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
+import { CircularProgress, colors } from "@mui/material";
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { register, handleSubmit , formState:{errors} } = useForm();
   const [error, seterror] = useState("");
+  const [loading, setloading] = useState(false)
 
   const login = async(data) => {
     seterror("");
+    setloading(true);
     try {
       const session = await authService.login(data);
 
@@ -25,6 +28,8 @@ function Login() {
       }
     } catch (error) {
       seterror(error.message);
+    } finally {
+      setloading(false)
     }
   };
   return (
@@ -79,8 +84,8 @@ function Login() {
 
             {errors.password &&  <p className="text-red-500 text-sm mb-3">{errors.password.message}</p> }
 
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? <CircularProgress size={20} sx={{color:"white"}} /> : "Sign in"}
             </Button>
           </div>
         </form>

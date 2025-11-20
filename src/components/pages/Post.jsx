@@ -4,16 +4,17 @@ import appwriteService from "../../appwrite/config";
 import { Button, Container } from "..";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
+import CircularIndeterminate from "../Loader";
+import { CircularProgress } from "@mui/material";
 
 export default function Post() {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
     const navigate = useNavigate();
+    const [postloading, setpostloading] = useState(true)
+    const [deleteloading, setdeleteloading] = useState(false)
 
     const userData = useSelector((state) => state.auth.userData);
-    // console.log(userData)
-    // console.log(post.userId)
-    // console.log(post)
     const isAuthor = post && userData ? post.userId === userData.$id : false;
 
     useEffect(() => {
@@ -21,21 +22,23 @@ export default function Post() {
             appwriteService.getPost(slug).then((post) => {
                 if (post) setPost(post);
                 else navigate("/");
-            });
+            }).finally(() => setpostloading(false));
         } else navigate("/");
     }, [slug, navigate]);
 
     const deletePost = () => {
+        setdeleteloading(true)
         appwriteService.deletePost(post.$id).then((status) => {
             if (status) {
                 appwriteService.deleteFile(post.featuredImage);
                 navigate("/");
             }
-        });
+        }).finally(() => setdeleteloading(false));
     };
   
 
     // console.log(previewUrl)
+    if (postloading) return <CircularIndeterminate/>
     
     return post ? (
         <div className="py-8">
@@ -55,7 +58,7 @@ export default function Post() {
                                 </Button>
                             </Link>
                             <Button bgColor="bg-red-500" onClick={deletePost}>
-                                Delete
+                                {deleteloading ? <CircularProgress size={18}/> : "Delete"}
                             </Button>
                         </div>
                     )}

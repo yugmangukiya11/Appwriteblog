@@ -1,14 +1,16 @@
-import React,{useCallback, useEffect} from 'react'
+import React,{useCallback, useEffect, useState} from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import appWriteService from '../../appwrite/config'
 import {Button , Input , Select , RTE} from '../index'
 import { useForm } from 'react-hook-form'
+import { CircularProgress } from '@mui/material'
 
 
 export default function PostForm({post}) {
 
     const [selectedImagePreview, setSelectedImagePreview] = React.useState(null);
+    const [loading, setloading] = useState(false)
 
 
     const { register, handleSubmit, watch, setValue, control, getValues,reset,formState: { errors }, } = useForm({
@@ -34,6 +36,7 @@ export default function PostForm({post}) {
     const navigate = useNavigate();
     const userData = useSelector((state) => state.auth.userData);
     const submit = async (data) => {
+        setloading(true)
 
         if(post){
             const file = data.image[0] ? await appWriteService.uploadFile(data.image[0]) : null;
@@ -45,7 +48,7 @@ export default function PostForm({post}) {
             const dbPost = await appWriteService.updatePost(post.$id,{
                 ...data,
                 featuredImage : file ? file.$id : undefined
-            });
+            }).finally(() => setloading(false));
 
             if(dbPost) navigate(`/post/${dbPost.$id}`);
         
@@ -65,7 +68,7 @@ export default function PostForm({post}) {
                     userId : userData.$id,
                     // featuredImage : file.$id,
                     // userId : "68e7b1b9003350fa8bab",
-                });
+                }).finally(() => setloading(false));
 
                 if(dbPost){
                     navigate(`/post/${dbPost.$id}`);
@@ -155,7 +158,7 @@ export default function PostForm({post}) {
                     {...register("status", { required: true })}
                 />
                 <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
+                    {loading ? (<CircularProgress size={18} />) :( post ? "Update" : "Submit")}
                 </Button>
             </div>
         </form>

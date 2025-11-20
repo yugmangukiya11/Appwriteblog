@@ -5,15 +5,18 @@ import { Link,useNavigate } from 'react-router-dom'
 import { login } from '../store/authSlice'
 import { useDispatch } from 'react-redux'
 import { set, useForm } from 'react-hook-form' 
+import { CircularProgress } from '@mui/material'
 
 function SignUp() {
     const navigate = useNavigate()
     const dispatch =  useDispatch()
     const [error, seterror] = useState("")
     const {register , handleSubmit , formState : {errors}} = useForm()
+    const [loading, setloading] = useState(false)
 
     const create = async(data) => {
         seterror("")
+        setloading(true)
         try {
             const userData = await authService.createAccount(data)
             if(userData){
@@ -23,6 +26,8 @@ function SignUp() {
             }
         } catch (error) {
             seterror(error.message)
+        } finally{
+            setloading(false)
         }
 
     }
@@ -96,7 +101,9 @@ function SignUp() {
                             errors.password && <p className="text-red-500 text-sm mb-3">{errors.password.message}</p>
                         }
                         <Button type="submit" className="w-full">
-                            Create Account
+                            {
+                                loading ? <CircularProgress size={20} sx={{color:"white"}}/> : "Create Account"
+                            }
                         </Button>
                     </div>
                 </form>

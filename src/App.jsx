@@ -5,6 +5,7 @@ import authService from "./appwrite/auth"
 import { login, logout } from "./store/authSlice"
 import {Header,Footer} from "./components/index.js"
 import {Outlet} from "react-router-dom"
+import CircularIndeterminate from "./components/Loader.jsx"
 function App() {
 
   const [Loading, setLoading] = useState(true)
@@ -32,7 +33,7 @@ function App() {
       <Outlet/>
       <Footer/>
     </div>
-  ) : (<div className="min-h-screen flex flex-wrap">loading</div>)
+  ) : (<CircularIndeterminate/>)
 }
 
 export default App
