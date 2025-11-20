@@ -25,28 +25,6 @@ function App() {
     .finally(() => setLoading(false))
   }, [])
 
-// useEffect(() => {
-//   const fetchUser = async () => {
-//     try {
-//       const userData = await authService.getCurrentUser();
-//       console.log('userData main app', userData);
-
-//       if (userData) {
-//         dispatch(login(userData));
-//       } else {
-//         dispatch(logout());
-//       }
-//     } catch (error) {
-//       console.error("Error fetching user:", error);
-//       dispatch(logout());
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   fetchUser();
-// }, []);
-
 
   return !Loading ? (
     <div>

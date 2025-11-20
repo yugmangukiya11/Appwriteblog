@@ -9,7 +9,7 @@ import authService from "../appwrite/auth";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit , formState:{errors} } = useForm();
   const [error, seterror] = useState("");
 
   const login = async(data) => {
@@ -57,23 +57,27 @@ function Login() {
               placeholder="Enter Email"
               type="email"
               {...register("email", {
-                required: true,
+                required: "*Email is required",
                 validate: {
                   matchPatern: (value) =>
                     /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                    "Email address must be a valid address",
+                    "*Email address must be a valid address",
                 },
               })}
             />
+
+            {errors.email && <p className="text-red-500 text-sm mb-3">{errors.email.message}</p>}
 
             <Input
               label="PassWord : "
               placeholder="Enter Password"
               type="password"
               {...register("password", {
-                required: true,
+                required: "*password is required",
               })}
             />
+
+            {errors.password &&  <p className="text-red-500 text-sm mb-3">{errors.password.message}</p> }
 
             <Button type="submit" className="w-full">
               Sign in

@@ -10,7 +10,7 @@ function SignUp() {
     const navigate = useNavigate()
     const dispatch =  useDispatch()
     const [error, seterror] = useState("")
-    const {register , handleSubmit} = useForm()
+    const {register , handleSubmit , formState : {errors}} = useForm()
 
     const create = async(data) => {
         seterror("")
@@ -54,30 +54,47 @@ function SignUp() {
                             placeholder = "Enter your Full Name"
                             {
                                 ...register("name" , {
-                                    required : true
+                                    required : "*Name is Required",
+                                    minLength: {
+                                        value: 3,
+                                        message: "*Name must be at least 3 characters",
+                                        },
                                 })
                             }
                         />
+                        {
+                            errors.name && <p className="text-red-500 text-sm mb-3">{errors.name.message}</p>
+                        }
                         <Input
                             label = "Email : "
                             placeholder = "Enter Your Email"
                             {
                                 ...register("email" , {
-                                    required : true,
+                                    required : "*Email is required",
                                     validate : {
                                         matchPatern : (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 
-                                    "Email address must be a valid address",}
+                                    "Email address must be a valid address(test@gmail.com)",}
                                 })}
                         />
+                        {
+                            errors.email && <p className="text-red-500 text-sm mb-3">{errors.email.message}</p>
+                        }
                         <Input
                             label = "Password : "
                             placeholder = "Enter your Password"
                             {
                                 ...register("password" , {
-                                    required : true,
+                                    required : "*Password is required",
+                                    validate : {
+                                        matchPatern : (value) => /^(?=.*[A-Za-z])(?=.*[@$!%*?&_])[A-Za-z0-9@$_!%*?&]{8,}$/.test(value) || 
+                                    "Password must contain at least 8 characters, with letters and numbers(@$!%*?&)"}
+
                                 })
                             }
                         />
+                        {
+                            errors.password && <p className="text-red-500 text-sm mb-3">{errors.password.message}</p>
+                        }
                         <Button type="submit" className="w-full">
                             Create Account
                         </Button>
